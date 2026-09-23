@@ -1,0 +1,12 @@
+Advisory ADV-2026-027
+Threat actor / activity cluster: Unattributed
+
+Summary:
+Reporting indicates a rise in unauthorized write attempts to programmable logic controllers reachable via compromised vendor remote-access pathways, generally clustered within 24-48 hours of initial anomalous vendor authentication, suggesting a compressed operational timeline once initial access is achieved.
+
+Associated ATT&CK for ICS tactics: Impair Process Control, Inhibit Response Function
+
+Indicators observed:
+- unauthorized setpoint write attempt
+- process value deviation from setpoint
+- OT protocol traffic outside historical baseline

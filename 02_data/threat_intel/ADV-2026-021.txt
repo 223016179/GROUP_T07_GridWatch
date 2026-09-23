@@ -1,0 +1,12 @@
+Advisory ADV-2026-021
+Threat actor / activity cluster: Suspected supply-chain intrusion set (SCIS-4)
+
+Summary:
+A campaign targeting maintenance vendors serving industrial operators has been linked to attempts to disable host-based logging shortly after gaining a foothold, consistent with a defense-evasion objective, before pivoting toward historian and data-collection infrastructure.
+
+Associated ATT&CK for ICS tactics: Defense Evasion, Discovery, Collection
+
+Indicators observed:
+- local logging service disabled shortly after logon
+- sequential authentication to multiple engineering workstations
+- unusual process lineage on jump host

@@ -1,0 +1,13 @@
+Advisory ADV-2026-014
+Threat actor / activity cluster: Unattributed activity cluster (tracked internally as CLUSTER-BRONZE)
+
+Summary:
+Analysts observed an activity cluster abusing legitimate third-party remote-maintenance accounts to reach engineering workstations at energy-sector operators. Initial access relied on valid vendor credentials rather than exploitation, followed by credential-access tooling and staged collection of engineering-network files prior to attempts to reach historian and control-adjacent hosts.
+
+Associated ATT&CK for ICS tactics: Initial Access, Credential Access, Collection, Lateral Movement
+
+Indicators observed:
+- off-hours vendor logons
+- atypical source IP for known vendor account
+- credential-dumping utility execution
+- archive-staging utility on engineering host

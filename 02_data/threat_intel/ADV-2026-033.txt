@@ -1,0 +1,10 @@
+Advisory ADV-2026-033
+Threat actor / activity cluster: Unattributed
+
+Summary:
+Operators are advised that legitimate maintenance activity and early-stage compromise can present similarly in authentication logs alone; analysts should require corroboration from endpoint and OT-side telemetry before escalating a vendor session as malicious.
+
+Associated ATT&CK for ICS tactics: Discovery, Collection
+
+Indicators observed:
+- single-source anomaly without cross-log corroboration
