@@ -1,0 +1,11 @@
+# Reconstructed from the analysis techniques evidenced in the result files
+# (confusion matrices, ROC-AUC, K-Means, TF-IDF, LDA, Monte Carlo simulation).
+# Verify against your actual script imports and pin exact versions before
+# submission (e.g. `pip freeze > requirements.txt` in your working venv).
+
+pandas
+numpy
+scikit-learn
+scipy
+matplotlib
+networkx        # graph-based Monte Carlo propagation simulation

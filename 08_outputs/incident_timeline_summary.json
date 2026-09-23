@@ -1,0 +1,56 @@
+{
+  "suspect_account": "VEND-ACME-03",
+  "investigation_window": [
+    "2026-08-10 16:06:00",
+    "2026-08-26 12:40:00"
+  ],
+  "n_cross_referenced_events": 47,
+  "n_distinct_sources": 3,
+  "meets_charter_target(>=6 events, >=3 sources)": true,
+  "affected_users_assets": {
+    "vendor_account": "VEND-ACME-03",
+    "engineering_hosts_touched": [
+      "ENG-WKS-01",
+      "ENG-WKS-02",
+      "ENG-WKS-03",
+      "ENG-WKS-04",
+      "ENG-WKS-05",
+      "HIST-SRV-01",
+      "JUMP-OT-01"
+    ],
+    "ot_assets_flagged": [
+      "PLC-03",
+      "RTU-05"
+    ]
+  },
+  "hypothesis_test": {
+    "hypothesis_A_legitimate_maintenance": {
+      "supported_by": "Vendor account has valid credentials and historical access pattern",
+      "contradicted_by": [
+        "off_hours_or_atypical_ip",
+        "credential_access_edr_alert",
+        "defense_evasion_edr_alert",
+        "ot_unauthorized_write",
+        "lateral_movement_multi_host"
+      ]
+    },
+    "hypothesis_B_compromise": {
+      "supported_by": [
+        "off_hours_or_atypical_ip",
+        "credential_access_edr_alert",
+        "defense_evasion_edr_alert",
+        "ot_unauthorized_write",
+        "lateral_movement_multi_host"
+      ],
+      "confidence": "High"
+    }
+  },
+  "overall_confidence": "High",
+  "containment_eradication_recovery_actions": [
+    "Immediately disable/suspend the vendor account's remote-access credentials pending investigation",
+    "Force re-authentication (with MFA) for all other vendor accounts sharing the same jump host",
+    "Isolate the affected engineering workstations from the OT network segment pending forensic imaging",
+    "Validate PLC/RTU setpoints against known-good configuration and roll back unauthorized changes",
+    "Rotate credentials/certificates used on the compromised remote-access pathway"
+  ]
+}

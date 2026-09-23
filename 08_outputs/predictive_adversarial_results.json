@@ -1,0 +1,42 @@
+{
+  "prediction_horizon": "Next vendor session for the same account (rolling, re-scored per new session)",
+  "target": "P(session represents active compromise reaching ICS assets)",
+  "risk_features": [
+    "off_hours_flag",
+    "hour_zscore",
+    "duration_zscore",
+    "failed_logon",
+    "distinct_hosts_48h",
+    "edr_alerts_near",
+    "edr_high_crit_near"
+  ],
+  "alert_threshold": 0.5,
+  "sessions_at_or_above_threshold": 19,
+  "adversarial_cases": [
+    {
+      "case": "Living-off-the-land tooling (avoids known-bad EDR signatures)",
+      "original_score": 1.0,
+      "evasion_score": 1.0,
+      "evaded_at_alert_threshold": false
+    },
+    {
+      "case": "Living-off-the-land + timing/duration mimicry",
+      "original_score": 1.0,
+      "evasion_score": 0.539,
+      "evaded_at_alert_threshold": false
+    },
+    {
+      "case": "Full behavioural mimicry: LOTL tooling + timing + duration + single-host reach",
+      "original_score": 1.0,
+      "evasion_score": 0.003,
+      "evaded_at_alert_threshold": true
+    }
+  ],
+  "n_of_cases_evading_detection": "1/3",
+  "governance_and_drift_controls": [
+    "Model retrained on a rolling 28-day window as new session data is confirmed/labelled",
+    "Alert threshold reviewed monthly against realised precision/recall, not fixed permanently",
+    "Feature drift check: if peer-group baselines (Section 6) shift >2 std beyond training-period values, features are considered stale and the model is flagged for retraining",
+    "Behavioural features alone are shown here to be evadable (see adversarial cases) - governance requires the model's output to always be fused with EDR/OT corroboration (Sections 6-7), never acted on in isolation"
+  ]
+}

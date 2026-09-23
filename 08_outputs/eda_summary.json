@@ -1,0 +1,38 @@
+{
+  "quality_log": {
+    "vendor_auth": {
+      "rows": 323,
+      "date_range": [
+        "2026-08-01 10:25:00",
+        "2026-08-28 15:59:00"
+      ],
+      "null_cells": 0,
+      "duplicate_rows": 0
+    },
+    "edr_telemetry": {
+      "rows": 590,
+      "date_range": [
+        "2026-08-01 08:14:00",
+        "2026-08-28 18:47:00"
+      ],
+      "null_cells": 0,
+      "duplicate_rows": 0
+    },
+    "ot_ids_historian": {
+      "rows": 1580,
+      "date_range": [
+        "2026-08-01 00:15:00",
+        "2026-08-28 23:44:00"
+      ],
+      "null_cells": 0,
+      "duplicate_rows": 0
+    }
+  },
+  "vendor_accounts": 7,
+  "distinct_destination_hosts": 7,
+  "edr_high_critical_alerts": 4,
+  "ot_flagged_events": 4,
+  "baseline_session_duration_mean_min": 22.2,
+  "baseline_session_duration_std_min": 13.7,
+  "baseline_logon_hour_mean": 12.2
+}

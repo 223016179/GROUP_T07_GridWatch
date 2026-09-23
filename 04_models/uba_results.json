@@ -1,0 +1,56 @@
+{
+  "peer_groups": [
+    {
+      "vendor_account": "VEND-ACME-01",
+      "off_hours_rate": 0.0,
+      "mean_duration": 19.772727272727273,
+      "mean_lateral": 2.340909090909091,
+      "peer_group": 1
+    },
+    {
+      "vendor_account": "VEND-ACME-02",
+      "off_hours_rate": 0.0,
+      "mean_duration": 19.63157894736842,
+      "mean_lateral": 2.3421052631578947,
+      "peer_group": 1
+    },
+    {
+      "vendor_account": "VEND-ACME-03",
+      "off_hours_rate": 0.06896551724137931,
+      "mean_duration": 27.96551724137931,
+      "mean_lateral": 2.9482758620689653,
+      "peer_group": 0
+    },
+    {
+      "vendor_account": "VEND-PLC-SVC-01",
+      "off_hours_rate": 0.0,
+      "mean_duration": 22.130434782608695,
+      "mean_lateral": 2.5652173913043477,
+      "peer_group": 1
+    },
+    {
+      "vendor_account": "VEND-PLC-SVC-02",
+      "off_hours_rate": 0.0,
+      "mean_duration": 20.854166666666668,
+      "mean_lateral": 2.5833333333333335,
+      "peer_group": 1
+    },
+    {
+      "vendor_account": "VEND-TURBOMAINT-01",
+      "off_hours_rate": 0.0,
+      "mean_duration": 21.77777777777778,
+      "mean_lateral": 2.066666666666667,
+      "peer_group": 1
+    },
+    {
+      "vendor_account": "VEND-TURBOMAINT-02",
+      "off_hours_rate": 0.0,
+      "mean_duration": 20.90909090909091,
+      "mean_lateral": 2.3636363636363638,
+      "peer_group": 1
+    }
+  ],
+  "uba_threshold_95th_pct": 4.118,
+  "sessions_flagged": 17,
+  "recall_of_injected_compromise_at_threshold": 0.833
+}

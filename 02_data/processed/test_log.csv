@@ -1,0 +1,12 @@
+test_id,component,input_condition,expected_result,actual_result,status
+T01-vendor_auth.csv,Data generation,File should exist and be non-empty,"File exists, size > 0",OK,PASS
+T01-edr_telemetry.csv,Data generation,File should exist and be non-empty,"File exists, size > 0",OK,PASS
+T01-ot_ids_historian.csv,Data generation,File should exist and be non-empty,"File exists, size > 0",OK,PASS
+T01-ground_truth.csv,Data generation,File should exist and be non-empty,"File exists, size > 0",OK,PASS
+T02,Data quality,vendor_auth.csv should have no nulls/dupes,"0 nulls, 0 duplicates","0 nulls, 0 dupes",PASS
+T03,Supervised ML,Model results should report full metric set,"Keys present: {'confusion_matrix', 'recall', 'f1', 'precision', 'roc_auc'}",Present,PASS
+T04,UBA/anomaly baselining,UBA should flag at least one true compromised session,recall > 0,recall = 0.833,PASS
+T05,Incident timeline,Timeline should meet charter Objective 1 target,>=6 events across >=3 sources,"47 events, 3 sources",PASS
+T06,Simulation,Combined controls should reduce mean blast radius vs baseline,combined < baseline,1.52 < 8.03,PASS
+T07,Text mining/NLP,Every advisory should yield >=1 extracted tactic,all docs >=1 tactic,OK,PASS
+T08,Predictive/adversarial,Charter requires >=3 adversarial cases,>=3 cases,3 cases,PASS

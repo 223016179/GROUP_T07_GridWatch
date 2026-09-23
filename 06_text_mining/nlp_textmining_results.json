@@ -1,0 +1,122 @@
+{
+  "corpus_size": 4,
+  "extraction_per_document": {
+    "ADV-2026-014": {
+      "tactics_mentioned": [
+        "Initial Access",
+        "Execution",
+        "Lateral Movement",
+        "Collection"
+      ],
+      "indicators": [
+        "off-hours vendor logons",
+        "atypical source IP for known vendor account",
+        "credential-dumping utility execution",
+        "archive-staging utility on engineering host"
+      ]
+    },
+    "ADV-2026-021": {
+      "tactics_mentioned": [
+        "Evasion",
+        "Defense Evasion",
+        "Discovery",
+        "Collection"
+      ],
+      "indicators": [
+        "local logging service disabled shortly after logon",
+        "sequential authentication to multiple engineering workstations",
+        "unusual process lineage on jump host"
+      ]
+    },
+    "ADV-2026-027": {
+      "tactics_mentioned": [
+        "Initial Access",
+        "Inhibit Response Function",
+        "Impair Process Control"
+      ],
+      "indicators": [
+        "unauthorized setpoint write attempt",
+        "process value deviation from setpoint",
+        "OT protocol traffic outside historical baseline"
+      ]
+    },
+    "ADV-2026-033": {
+      "tactics_mentioned": [
+        "Discovery",
+        "Collection"
+      ],
+      "indicators": [
+        "single-source anomaly without cross-log corroboration"
+      ]
+    }
+  },
+  "topics": [
+    {
+      "topic": 0,
+      "top_terms": [
+        "corroboration",
+        "activity",
+        "process",
+        "vendor",
+        "collection",
+        "authentication",
+        "setpoint",
+        "unauthorized"
+      ]
+    },
+    {
+      "topic": 1,
+      "top_terms": [
+        "access",
+        "credential",
+        "engineering",
+        "cluster",
+        "reach",
+        "utility",
+        "vendor",
+        "initial"
+      ]
+    }
+  ],
+  "case_to_intelligence_links": [
+    {
+      "case_evidence": "off_hours_or_atypical_ip",
+      "matched_intel_indicator": "off-hours vendor logons",
+      "source_advisories": [
+        "ADV-2026-014"
+      ]
+    },
+    {
+      "case_evidence": "credential_access_edr_alert",
+      "matched_intel_indicator": "credential-dumping utility execution",
+      "source_advisories": [
+        "ADV-2026-014"
+      ]
+    },
+    {
+      "case_evidence": "defense_evasion_edr_alert",
+      "matched_intel_indicator": "local logging service disabled shortly after logon",
+      "source_advisories": [
+        "ADV-2026-021"
+      ]
+    },
+    {
+      "case_evidence": "ot_unauthorized_write",
+      "matched_intel_indicator": "unauthorized setpoint write attempt",
+      "source_advisories": [
+        "ADV-2026-027"
+      ]
+    },
+    {
+      "case_evidence": "lateral_movement_multi_host",
+      "matched_intel_indicator": "sequential authentication to multiple engineering workstations",
+      "source_advisories": [
+        "ADV-2026-021"
+      ]
+    }
+  ],
+  "limitations": [
+    "Corpus is small (n=4 synthetic advisories) for this milestone; charter target is 15-30 - expanding the corpus is tracked in the backlog (Section 14).",
+    "Keyword/rule-based extraction is precise but not recall-optimal; topic modelling on a corpus this small is illustrative rather than statistically robust."
+  ]
+}
