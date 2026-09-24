@@ -1,0 +1,41 @@
+{
+  "model": "Monte Carlo hop-based propagation over synthetic OT/engineering graph (21 nodes, 23 edges) - R port",
+  "assumptions": [
+    "Spread probability per hop is uniform (0.55) absent controls - a simplification",
+    "Segmentation fully blocks spread into named nodes (RTU-01/04/07); MFA reduces (not eliminates) spread probability by 60%",
+    "4-hop cap approximates the case investigation window's dwell time",
+    "1000 Monte Carlo iterations per scenario to characterise uncertainty (upgraded from the original 200)",
+    "pct_reaching_any_ot_asset replicates the original metric definition (blast radius >= 1, i.e. spread past the entry point at all); pct_reaching_ot_asset_strict is a supplementary node-type-checked measure of specifically reaching a PLC/RTU"
+  ],
+  "iterations": 1000,
+  "scenario_results": {
+    "baseline_no_controls": {
+      "mean_blast_radius": 7.78,
+      "p90_blast_radius": 12,
+      "max_blast_radius": 18,
+      "pct_reaching_any_ot_asset": 0.99,
+      "pct_reaching_ot_asset_strict": 0.946
+    },
+    "network_segmentation": {
+      "mean_blast_radius": 5.92,
+      "p90_blast_radius": 10,
+      "max_blast_radius": 16,
+      "pct_reaching_any_ot_asset": 0.993,
+      "pct_reaching_ot_asset_strict": 0.873
+    },
+    "vendor_mfa": {
+      "mean_blast_radius": 1.93,
+      "p90_blast_radius": 4,
+      "max_blast_radius": 11,
+      "pct_reaching_any_ot_asset": 0.774,
+      "pct_reaching_ot_asset_strict": 0.36
+    },
+    "segmentation_plus_mfa": {
+      "mean_blast_radius": 1.69,
+      "p90_blast_radius": 4,
+      "max_blast_radius": 8,
+      "pct_reaching_any_ot_asset": 0.787,
+      "pct_reaching_ot_asset_strict": 0.244
+    }
+  }
+}
