@@ -1,0 +1,63 @@
+{
+  "corpus_size": 4,
+  "extraction_per_document": {
+    "ADV-2026-014": {
+      "tactics_mentioned": ["Initial Access", "Credential Access", "Execution", "Collection"],
+      "indicators": ["off[- ]?hours vendor logon", "atypical source ip", "credential[- ]?dumping", "archive[- ]?staging utility", "archive[- ]?staging"],
+      "primary_tactic_classification": "Initial Access"
+    },
+    "ADV-2026-021": {
+      "tactics_mentioned": ["Defense Evasion", "Discovery", "Lateral Movement"],
+      "indicators": ["defense evasion", "unusual process lineage", "sequential authentication", "multiple engineering workstations"],
+      "primary_tactic_classification": "Lateral Movement"
+    },
+    "ADV-2026-027": {
+      "tactics_mentioned": ["Inhibit Response Function", "Impair Process Control"],
+      "indicators": ["unauthorized setpoint write", "process value deviation", "ot protocol traffic"],
+      "primary_tactic_classification": "Impair Process Control"
+    },
+    "ADV-2026-033": {
+      "tactics_mentioned": {},
+      "indicators": {},
+      "primary_tactic_classification": null
+    }
+  },
+  "topics": [
+    {
+      "topic": 0,
+      "top_terms": ["followed", "setpoint", "utility", "vendor", "account", "afterward", "alongside", "archivestaging"]
+    },
+    {
+      "topic": 1,
+      "top_terms": ["observed", "along", "anomaly", "authentication", "consistent", "corroboration", "crosslog", "defense"]
+    }
+  ],
+  "case_to_intelligence_links": [
+    {
+      "case_evidence": "off_hours_or_atypical_ip",
+      "matched_source_advisory": "ADV-2026-014",
+      "similarity_score": 0.083
+    },
+    {
+      "case_evidence": "credential_access_edr_alert",
+      "matched_source_advisory": "ADV-2026-014",
+      "similarity_score": 0.086
+    },
+    {
+      "case_evidence": "defense_evasion_edr_alert",
+      "matched_source_advisory": "ADV-2026-021",
+      "similarity_score": 0.082
+    },
+    {
+      "case_evidence": "ot_unauthorized_write",
+      "matched_source_advisory": "ADV-2026-027",
+      "similarity_score": 0.07
+    },
+    {
+      "case_evidence": "lateral_movement_multi_host",
+      "matched_source_advisory": null,
+      "similarity_score": 0.048
+    }
+  ],
+  "limitations": ["Corpus is 4 documents against the charter target of 15-30 - results are illustrative, not statistically robust. Populate 02_data/raw/threat_intel with real advisories and re-run.", "Rule-based tactic classification is precise but not recall-optimal; a trained classifier should replace it once the corpus supports a proper train/test split."]
+}
