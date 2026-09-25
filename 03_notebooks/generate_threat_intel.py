@@ -1,0 +1,92 @@
+"""
+Generates a small corpus of ORIGINAL, synthetic threat-intelligence
+advisory texts modelled on the structure of public ICS advisories
+(e.g. CISA/ICS-CERT style), but entirely authored for this project -
+no real advisory text is reproduced. Each references MITRE ATT&CK for
+ICS-style tactic names for downstream text-mining (Section 10).
+"""
+import os, json, random
+
+random.seed(7)
+OUT_DIR = "/home/claude/gridwatch/threat_intel"
+os.makedirs(OUT_DIR, exist_ok=True)
+
+TACTICS = [
+    "Initial Access", "Execution", "Persistence", "Evasion",
+    "Discovery", "Lateral Movement", "Collection", "Command and Control",
+    "Inhibit Response Function", "Impair Process Control", "Impact",
+]
+
+TEMPLATES = [
+    dict(
+        id="ADV-2026-014",
+        actor="Unattributed activity cluster (tracked internally as CLUSTER-BRONZE)",
+        summary=(
+            "Analysts observed an activity cluster abusing legitimate third-party "
+            "remote-maintenance accounts to reach engineering workstations at "
+            "energy-sector operators. Initial access relied on valid vendor "
+            "credentials rather than exploitation, followed by credential-access "
+            "tooling and staged collection of engineering-network files prior to "
+            "attempts to reach historian and control-adjacent hosts."
+        ),
+        ttps=["Initial Access", "Credential Access", "Collection", "Lateral Movement"],
+        indicators=["off-hours vendor logons", "atypical source IP for known vendor account",
+                    "credential-dumping utility execution", "archive-staging utility on engineering host"],
+    ),
+    dict(
+        id="ADV-2026-021",
+        actor="Suspected supply-chain intrusion set (SCIS-4)",
+        summary=(
+            "A campaign targeting maintenance vendors serving industrial operators "
+            "has been linked to attempts to disable host-based logging shortly "
+            "after gaining a foothold, consistent with a defense-evasion objective, "
+            "before pivoting toward historian and data-collection infrastructure."
+        ),
+        ttps=["Defense Evasion", "Discovery", "Collection"],
+        indicators=["local logging service disabled shortly after logon",
+                    "sequential authentication to multiple engineering workstations",
+                    "unusual process lineage on jump host"],
+    ),
+    dict(
+        id="ADV-2026-027",
+        actor="Unattributed",
+        summary=(
+            "Reporting indicates a rise in unauthorized write attempts to "
+            "programmable logic controllers reachable via compromised vendor "
+            "remote-access pathways, generally clustered within 24-48 hours "
+            "of initial anomalous vendor authentication, suggesting a compressed "
+            "operational timeline once initial access is achieved."
+        ),
+        ttps=["Impair Process Control", "Inhibit Response Function"],
+        indicators=["unauthorized setpoint write attempt", "process value deviation from setpoint",
+                    "OT protocol traffic outside historical baseline"],
+    ),
+    dict(
+        id="ADV-2026-033",
+        actor="Unattributed",
+        summary=(
+            "Operators are advised that legitimate maintenance activity and "
+            "early-stage compromise can present similarly in authentication logs "
+            "alone; analysts should require corroboration from endpoint and "
+            "OT-side telemetry before escalating a vendor session as malicious."
+        ),
+        ttps=["Discovery", "Collection"],
+        indicators=["single-source anomaly without cross-log corroboration"],
+    ),
+]
+
+for t in TEMPLATES:
+    text = (
+        f"Advisory {t['id']}\n"
+        f"Threat actor / activity cluster: {t['actor']}\n\n"
+        f"Summary:\n{t['summary']}\n\n"
+        f"Associated ATT&CK for ICS tactics: {', '.join(t['ttps'])}\n\n"
+        f"Indicators observed:\n" + "\n".join(f"- {i}" for i in t["indicators"]) + "\n"
+    )
+    with open(f"{OUT_DIR}/{t['id']}.txt", "w") as f:
+        f.write(text)
+
+with open(f"{OUT_DIR}/index.json", "w") as f:
+    json.dump(TEMPLATES, f, indent=2)
+
+print(f"Wrote {len(TEMPLATES)} synthetic advisories to {OUT_DIR}")
