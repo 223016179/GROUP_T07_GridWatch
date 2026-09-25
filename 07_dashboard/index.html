@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>GridWatch — Vendor Pathway Risk Console</title>
+<style>
+  :root{
+    --bg:#0c1116; --panel:#141b22; --panel-2:#1a232c; --line:#26313c;
+    --text:#dbe3ea; --muted:#7d8ea0; --mono: 'IBM Plex Mono','SFMono-Regular',Consolas,monospace;
+    --sans: 'Inter','Segoe UI',sans-serif;
+    --crit:#e15a5a; --high:#e8a13d; --med:#e0c23d; --low:#5aa9e1; --ok:#4fae82;
+    --accent:#5ec9c0;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;}
+  .app{display:grid;grid-template-columns:220px 1fr;min-height:100vh;}
+  nav{background:var(--panel);border-right:1px solid var(--line);padding:20px 0;}
+  .brand{padding:0 20px 18px 20px;border-bottom:1px solid var(--line);margin-bottom:10px;}
+  .brand .name{font-weight:600;font-size:15px;letter-spacing:0.2px;}
+  .brand .sub{color:var(--muted);font-size:11.5px;margin-top:3px;font-family:var(--mono);}
+  .navitem{padding:10px 20px;color:var(--muted);cursor:pointer;font-size:13px;border-left:2px solid transparent;}
+  .navitem:hover{color:var(--text);}
+  .navitem.active{color:var(--text);border-left-color:var(--accent);background:var(--panel-2);}
+  main{padding:26px 34px;max-width:1180px;}
+  h1{font-size:19px;font-weight:600;margin:0 0 4px 0;}
+  .pagesub{color:var(--muted);font-size:12.5px;margin-bottom:22px;}
+  .grid{display:grid;gap:14px;}
+  .cols-4{grid-template-columns:repeat(4,1fr);}
+  .cols-3{grid-template-columns:repeat(3,1fr);}
+  .cols-2{grid-template-columns:1fr 1fr;}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:16px 18px;}
+  .stat .label{color:var(--muted);font-size:11.5px;text-transform:uppercase;letter-spacing:0.4px;}
+  .stat .value{font-family:var(--mono);font-size:24px;margin-top:6px;font-weight:600;}
+  .stat .note{color:var(--muted);font-size:11.5px;margin-top:4px;}
+  section{margin-bottom:26px;}
+  section > h2{font-size:14px;font-weight:600;margin:0 0 10px 0;color:var(--text);}
+  table{width:100%;border-collapse:collapse;font-size:12.5px;}
+  th{text-align:left;color:var(--muted);font-weight:500;padding:6px 10px;border-bottom:1px solid var(--line);font-size:11px;text-transform:uppercase;letter-spacing:0.3px;}
+  td{padding:7px 10px;border-bottom:1px solid var(--line);font-family:var(--mono);}
+  tr:hover td{background:var(--panel-2);}
+  .badge{display:inline-block;padding:2px 8px;border-radius:3px;font-size:11px;font-family:var(--mono);font-weight:600;}
+  .badge.crit{background:rgba(225,90,90,0.18);color:var(--crit);}
+  .badge.high{background:rgba(232,161,61,0.18);color:var(--high);}
+  .badge.med{background:rgba(224,194,61,0.16);color:var(--med);}
+  .badge.low{background:rgba(90,169,225,0.16);color:var(--low);}
+  .badge.ok{background:rgba(79,174,130,0.16);color:var(--ok);}
+  .bar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+  .bar-label{width:170px;font-size:12px;color:var(--muted);font-family:var(--mono);flex-shrink:0;}
+  .bar-track{flex:1;background:var(--panel-2);border-radius:3px;height:16px;overflow:hidden;}
+  .bar-fill{height:100%;border-radius:3px;}
+  .bar-val{width:44px;text-align:right;font-family:var(--mono);font-size:12px;color:var(--text);}
+  .timeline-item{display:grid;grid-template-columns:150px 90px 1fr;gap:12px;padding:8px 0;border-bottom:1px solid var(--line);font-size:12.5px;}
+  .timeline-item .ts{font-family:var(--mono);color:var(--muted);}
+  .timeline-item .src{font-family:var(--mono);font-size:11px;text-transform:uppercase;}
+  .src.vendor_auth{color:var(--low);} .src.edr_telemetry{color:var(--high);} .src.ot_ids_historian{color:var(--crit);}
+  .pill-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;}
+  .pill{background:var(--panel-2);border:1px solid var(--line);color:var(--muted);font-family:var(--mono);font-size:11px;padding:3px 8px;border-radius:3px;}
+  .verdict{border-left:3px solid var(--crit);background:rgba(225,90,90,0.07);padding:12px 16px;border-radius:0 6px 6px 0;}
+  .verdict .conf{font-family:var(--mono);color:var(--crit);font-weight:600;}
+  .adv-case{padding:10px 0;border-bottom:1px solid var(--line);}
+  .adv-case .name{font-size:13px;margin-bottom:6px;}
+  .adv-scores{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:12px;}
+  .arrow{color:var(--muted);}
+  .page{display:none;} .page.active{display:block;}
+  .intel-doc{border:1px solid var(--line);border-radius:6px;padding:12px 14px;margin-bottom:10px;background:var(--panel-2);}
+  .intel-doc .id{font-family:var(--mono);color:var(--accent);font-size:12.5px;margin-bottom:6px;}
+  .footnote{color:var(--muted);font-size:11.5px;margin-top:8px;line-height:1.5;}
+</style>
+</head>
+<body>
+<div class="app">
+  <nav>
+    <div class="brand">
+      <div class="name">GridWatch</div>
+      <div class="sub">Vendor pathway risk console</div>
+    </div>
+    <div class="navitem active" data-page="overview">Overview</div>
+    <div class="navitem" data-page="sessions">Vendor sessions &amp; risk</div>
+    <div class="navitem" data-page="anomalies">Behavioural anomalies</div>
+    <div class="navitem" data-page="timeline">Incident timeline</div>
+    <div class="navitem" data-page="simulation">Propagation simulation</div>
+    <div class="navitem" data-page="intel">Threat intelligence</div>
+    <div class="navitem" data-page="adversarial">Adversarial testing</div>
+    <div class="navitem" data-page="qa">Test log</div>
+  </nav>
+  <main id="main"></main>
+</div>
+
+<script>
+const DATA = {"eda_summary": {"quality_log": {"vendor_auth": {"rows": 323, "date_range": ["2026-08-01 10:25:00", "2026-08-28 15:59:00"], "null_cells": 0, "duplicate_rows": 0}, "edr_telemetry": {"rows": 590, "date_range": ["2026-08-01 08:14:00", "2026-08-28 18:47:00"], "null_cells": 0, "duplicate_rows": 0}, "ot_ids_historian": {"rows": 1580, "date_range": ["2026-08-01 00:15:00", "2026-08-28 23:44:00"], "null_cells": 0, "duplicate_rows": 0}}, "vendor_accounts": 7, "distinct_destination_hosts": 7, "edr_high_critical_alerts": 4, "ot_flagged_events": 4, "baseline_session_duration_mean_min": 22.2, "baseline_session_duration_std_min": 13.7, "baseline_logon_hour_mean": 12.2}, "supervised_model_results": {"features_used": ["off_hours_flag", "hour_zscore", "duration_zscore", "failed_logon", "distinct_hosts_48h", "edr_alerts_near", "edr_high_crit_near"], "results": {"logistic_regression": {"confusion_matrix": [[95, 0], [2, 0]], "precision": 0.0, "recall": 0.0, "f1": 0.0, "roc_auc": 0.821, "threshold": 0.3, "n_test": 97, "n_positive_test": 2}, "decision_tree": {"confusion_matrix": [[95, 0], [2, 0]], "precision": 0.0, "recall": 0.0, "f1": 0.0, "roc_auc": 0.5, "threshold": 0.3, "n_test": 97, "n_positive_test": 2}}, "class_balance": {"positive": 6, "negative": 317}}, "uba_results": {"peer_groups": [{"vendor_account": "VEND-ACME-01", "off_hours_rate": 0.0, "mean_duration": 19.772727272727273, "mean_lateral": 2.340909090909091, "peer_group": 1}, {"vendor_account": "VEND-ACME-02", "off_hours_rate": 0.0, "mean_duration": 19.63157894736842, "mean_lateral": 2.3421052631578947, "peer_group": 1}, {"vendor_account": "VEND-ACME-03", "off_hours_rate": 0.06896551724137931, "mean_duration": 27.96551724137931, "mean_lateral": 2.9482758620689653, "peer_group": 0}, {"vendor_account": "VEND-PLC-SVC-01", "off_hours_rate": 0.0, "mean_duration": 22.130434782608695, "mean_lateral": 2.5652173913043477, "peer_group": 1}, {"vendor_account": "VEND-PLC-SVC-02", "off_hours_rate": 0.0, "mean_duration": 20.854166666666668, "mean_lateral": 2.5833333333333335, "peer_group": 1}, {"vendor_account": "VEND-TURBOMAINT-01", "off_hours_rate": 0.0, "mean_duration": 21.77777777777778, "mean_lateral": 2.066666666666667, "peer_group": 1}, {"vendor_account": "VEND-TURBOMAINT-02", "off_hours_rate": 0.0, "mean_duration": 20.90909090909091, "mean_lateral": 2.3636363636363638, "peer_group": 1}], "uba_threshold_95th_pct": 4.118, "sessions_flagged": 17, "recall_of_injected_compromise_at_threshold": 0.833}, "incident_timeline_summary": {"suspect_account": "VEND-ACME-03", "investigation_window": ["2026-08-10 16:06:00", "2026-08-26 12:40:00"], "n_cross_referenced_events": 47, "n_distinct_sources": 3, "meets_charter_target(>=6 events, >=3 sources)": true, "affected_users_assets": {"vendor_account": "VEND-ACME-03", "engineering_hosts_touched": ["ENG-WKS-01", "ENG-WKS-02", "ENG-WKS-03", "ENG-WKS-04", "ENG-WKS-05", "HIST-SRV-01", "JUMP-OT-01"], "ot_assets_flagged": ["PLC-03", "RTU-05"]}, "hypothesis_test": {"hypothesis_A_legitimate_maintenance": {"supported_by": "Vendor account has valid credentials and historical access pattern", "contradicted_by": ["off_hours_or_atypical_ip", "credential_access_edr_alert", "defense_evasion_edr_alert", "ot_unauthorized_write", "lateral_movement_multi_host"]}, "hypothesis_B_compromise": {"supported_by": ["off_hours_or_atypical_ip", "credential_access_edr_alert", "defense_evasion_edr_alert", "ot_unauthorized_write", "lateral_movement_multi_host"], "confidence": "High"}}, "overall_confidence": "High", "containment_eradication_recovery_actions": ["Immediately disable/suspend the vendor account's remote-access credentials pending investigation", "Force re-authentication (with MFA) for all other vendor accounts sharing the same jump host", "Isolate the affected engineering workstations from the OT network segment pending forensic imaging", "Validate PLC/RTU setpoints against known-good configuration and roll back unauthorized changes", "Rotate credentials/certificates used on the compromised remote-access pathway"]}, "simulation_results": {"model": "Monte Carlo hop-based propagation over synthetic OT/engineering graph (21 nodes, 23 edges)", "assumptions": ["Spread probability per hop is uniform (0.55) absent controls - a simplification", "Segmentation fully blocks spread into named nodes; MFA reduces (not eliminates) spread probability by 60%", "4-hop cap approximates the case investigation window's dwell time", "200 Monte Carlo iterations per scenario to characterise uncertainty"], "iterations": 200, "scenario_results": {"baseline_no_controls": {"mean_blast_radius": 8.03, "p90_blast_radius": 12.0, "max_blast_radius": 18, "pct_reaching_any_ot_asset": 1.0}, "network_segmentation": {"mean_blast_radius": 6.28, "p90_blast_radius": 10.0, "max_blast_radius": 14, "pct_reaching_any_ot_asset": 0.99}, "vendor_mfa": {"mean_blast_radius": 2.01, "p90_blast_radius": 4.0, "max_blast_radius": 8, "pct_reaching_any_ot_asset": 0.77}, "segmentation_plus_mfa": {"mean_blast_radius": 1.52, "p90_blast_radius": 3.1, "max_blast_radius": 7, "pct_reaching_any_ot_asset": 0.765}}}, "nlp_textmining_results": {"corpus_size": 4, "extraction_per_document": {"ADV-2026-014": {"tactics_mentioned": ["Initial Access", "Execution", "Lateral Movement", "Collection"], "indicators": ["off-hours vendor logons", "atypical source IP for known vendor account", "credential-dumping utility execution", "archive-staging utility on engineering host"]}, "ADV-2026-021": {"tactics_mentioned": ["Evasion", "Defense Evasion", "Discovery", "Collection"], "indicators": ["local logging service disabled shortly after logon", "sequential authentication to multiple engineering workstations", "unusual process lineage on jump host"]}, "ADV-2026-027": {"tactics_mentioned": ["Initial Access", "Inhibit Response Function", "Impair Process Control"], "indicators": ["unauthorized setpoint write attempt", "process value deviation from setpoint", "OT protocol traffic outside historical baseline"]}, "ADV-2026-033": {"tactics_mentioned": ["Discovery", "Collection"], "indicators": ["single-source anomaly without cross-log corroboration"]}}, "topics": [{"topic": 0, "top_terms": ["corroboration", "activity", "process", "vendor", "collection", "authentication", "setpoint", "unauthorized"]}, {"topic": 1, "top_terms": ["access", "credential", "engineering", "cluster", "reach", "utility", "vendor", "initial"]}], "case_to_intelligence_links": [{"case_evidence": "off_hours_or_atypical_ip", "matched_intel_indicator": "off-hours vendor logons", "source_advisories": ["ADV-2026-014"]}, {"case_evidence": "credential_access_edr_alert", "matched_intel_indicator": "credential-dumping utility execution", "source_advisories": ["ADV-2026-014"]}, {"case_evidence": "defense_evasion_edr_alert", "matched_intel_indicator": "local logging service disabled shortly after logon", "source_advisories": ["ADV-2026-021"]}, {"case_evidence": "ot_unauthorized_write", "matched_intel_indicator": "unauthorized setpoint write attempt", "source_advisories": ["ADV-2026-027"]}, {"case_evidence": "lateral_movement_multi_host", "matched_intel_indicator": "sequential authentication to multiple engineering workstations", "source_advisories": ["ADV-2026-021"]}], "limitations": ["Corpus is small (n=4 synthetic advisories) for this milestone; charter target is 15-30 - expanding the corpus is tracked in the backlog (Section 14).", "Keyword/rule-based extraction is precise but not recall-optimal; topic modelling on a corpus this small is illustrative rather than statistically robust."]}, "predictive_adversarial_results": {"prediction_horizon": "Next vendor session for the same account (rolling, re-scored per new session)", "target": "P(session represents active compromise reaching ICS assets)", "risk_features": ["off_hours_flag", "hour_zscore", "duration_zscore", "failed_logon", "distinct_hosts_48h", "edr_alerts_near", "edr_high_crit_near"], "alert_threshold": 0.5, "sessions_at_or_above_threshold": 19, "adversarial_cases": [{"case": "Living-off-the-land tooling (avoids known-bad EDR signatures)", "original_score": 1.0, "evasion_score": 1.0, "evaded_at_alert_threshold": false}, {"case": "Living-off-the-land + timing/duration mimicry", "original_score": 1.0, "evasion_score": 0.539, "evaded_at_alert_threshold": false}, {"case": "Full behavioural mimicry: LOTL tooling + timing + duration + single-host reach", "original_score": 1.0, "evasion_score": 0.003, "evaded_at_alert_threshold": true}], "n_of_cases_evading_detection": "1/3", "governance_and_drift_controls": ["Model retrained on a rolling 28-day window as new session data is confirmed/labelled", "Alert threshold reviewed monthly against realised precision/recall, not fixed permanently", "Feature drift check: if peer-group baselines (Section 6) shift >2 std beyond training-period values, features are considered stale and the model is flagged for retraining", "Behavioural features alone are shown here to be evadable (see adversarial cases) - governance requires the model's output to always be fused with EDR/OT corroboration (Sections 6-7), never acted on in isolation"]}, "top_risk_sessions": [{"session_id": "S00319", "vendor_account": "VEND-ACME-03", "timestamp": "2026-08-15 01:10:00", "destination_host": "JUMP-OT-01", "risk_score": 0.9997819082, "is_compromised_session": 1}, {"session_id": "S00320", "vendor_account": "VEND-ACME-03", "timestamp": "2026-08-15 04:30:00", "destination_host": "ENG-WKS-02", "risk_score": 0.9996487714, "is_compromised_session": 1}, {"session_id": "S00322", "vendor_account": "VEND-ACME-03", "timestamp": "2026-08-15 21:25:00", "destination_host": "HIST-SRV-01", "risk_score": 0.999190969, "is_compromised_session": 1}, {"session_id": "S00323", "vendor_account": "VEND-ACME-03", "timestamp": "2026-08-16 04:50:00", "destination_host": "ENG-WKS-02", "risk_score": 0.9949655292, "is_compromised_session": 1}, {"session_id": "S00321", "vendor_account": "VEND-ACME-03", "timestamp": "2026-08-15 07:15:00", "destination_host": "ENG-WKS-04", "risk_score": 0.0778222957, "is_compromised_session": 1}, {"session_id": "S00279", "vendor_account": "VEND-ACME-03", "timestamp": "2026-08-25 08:32:00", "destination_host": "ENG-WKS-05", "risk_score": 0.0065065394, "is_compromised_session": 0}, {"session_id": "S00292", "vendor_account": "VEND-ACME-03", "timestamp": "2026-08-26 07:14:00", "destination_host": "JUMP-OT-01", "risk_score": 0.0063323111, "is_compromised_session": 0}, {"session_id": "S00290", "vendor_account": "VEND-ACME-03", "timestamp": "2026-08-26 09:40:00", "destination_host": "ENG-WKS-01", "risk_score": 0.0040596113, "is_compromised_session": 0}, {"session_id": "S00295", "vendor_account": "VEND-ACME-03", "timestamp": "2026-08-26 09:28:00", "destination_host": "JUMP-OT-01", "risk_score": 0.0040271408, "is_compromised_session": 0}, {"session_id": "S00273", "vendor_account": "VEND-ACME-03", "timestamp": "2026-08-24 14:17:00", "destination_host": "ENG-WKS-04", "risk_score": 0.0039490315, "is_compromised_session": 0}], "uba_top_anomalies": [{"session_id": "S00319", "vendor_account": "VEND-ACME-03", "timestamp": "2026-08-15 01:10:00", "destination_host": "JUMP-OT-01", "uba_deviation_score": 8.2595291454, "is_compromised_session": 1}, {"session_id": "S00322", "vendor_account": "VEND-ACME-03", "timestamp": "2026-08-15 21:25:00", "destination_host": "HIST-SRV-01", "uba_deviation_score": 6.5721077552, "is_compromised_session": 1}, {"session_id": "S00320", "vendor_account": "VEND-ACME-03", "timestamp": "2026-08-15 04:30:00", "destination_host": "ENG-WKS-02", "uba_deviation_score": 5.5088430102, "is_compromised_session": 1}, {"session_id": "S00321", "vendor_account": "VEND-ACME-03", "timestamp": "2026-08-15 07:15:00", "destination_host": "ENG-WKS-04", "uba_deviation_score": 5.2526949962, "is_compromised_session": 1}, {"session_id": "S00323", "vendor_account": "VEND-ACME-03", "timestamp": "2026-08-16 04:50:00", "destination_host": "ENG-WKS-02", "uba_deviation_score": 5.0473196056, "is_compromised_session": 1}, {"session_id": "S00292", "vendor_account": "VEND-ACME-03", "timestamp": "2026-08-26 07:14:00", "destination_host": "JUMP-OT-01", "uba_deviation_score": 5.0356624106, "is_compromised_session": 0}, {"session_id": "S00290", "vendor_account": "VEND-ACME-03", "timestamp": "2026-08-26 09:40:00", "destination_host": "ENG-WKS-01", "uba_deviation_score": 5.0311996093, "is_compromised_session": 0}, {"session_id": "S00270", "vendor_account": "VEND-ACME-03", "timestamp": "2026-08-24 15:22:00", "destination_host": "ENG-WKS-03", "uba_deviation_score": 5.0154578503, "is_compromised_session": 0}, {"session_id": "S00239", "vendor_account": "VEND-ACME-02", "timestamp": "2026-08-21 07:12:00", "destination_host": "ENG-WKS-05", "uba_deviation_score": 4.9663221335, "is_compromised_session": 0}, {"session_id": "S00176", "vendor_account": "VEND-PLC-SVC-01", "timestamp": "2026-08-16 07:08:00", "destination_host": "ENG-WKS-03", "uba_deviation_score": 4.6823623967, "is_compromised_session": 0}, {"session_id": "S00279", "vendor_account": "VEND-ACME-03", "timestamp": "2026-08-25 08:32:00", "destination_host": "ENG-WKS-05", "uba_deviation_score": 4.5789663063, "is_compromised_session": 0}, {"session_id": "S00110", "vendor_account": "VEND-PLC-SVC-01", "timestamp": "2026-08-10 17:06:00", "destination_host": "JUMP-OT-01", "uba_deviation_score": 4.5173629247, "is_compromised_session": 0}, {"session_id": "S00260", "vendor_account": "VEND-PLC-SVC-02", "timestamp": "2026-08-23 14:37:00", "destination_host": "ENG-WKS-03", "uba_deviation_score": 4.4526071841, "is_compromised_session": 0}, {"session_id": "S00195", "vendor_account": "VEND-ACME-02", "timestamp": "2026-08-18 18:45:00", "destination_host": "JUMP-OT-01", "uba_deviation_score": 4.363329033, "is_compromised_session": 0}, {"session_id": "S00255", "vendor_account": "VEND-TURBOMAINT-02", "timestamp": "2026-08-23 07:27:00", "destination_host": "JUMP-OT-01", "uba_deviation_score": 4.2586141447, "is_compromised_session": 0}], "correlated_timeline": [{"event_id": "AUTH-00122", "timestamp": "2026-08-11 17:08:00", "source": "vendor_auth", "description": "Vendor logon: VEND-ACME-03 -> JUMP-OT-01 (27 min, Success)"}, {"event_id": "AUTH-00123", "timestamp": "2026-08-12 07:31:00", "source": "vendor_auth", "description": "Vendor logon: VEND-ACME-03 -> ENG-WKS-01 (24 min, Success)"}, {"event_id": "AUTH-00128", "timestamp": "2026-08-12 13:57:00", "source": "vendor_auth", "description": "Vendor logon: VEND-ACME-03 -> JUMP-OT-01 (31 min, Success)"}, {"event_id": "AUTH-00129", "timestamp": "2026-08-12 15:10:00", "source": "vendor_auth", "description": "Vendor logon: VEND-ACME-03 -> ENG-WKS-04 (25 min, Success)"}, {"event_id": "AUTH-00131", "timestamp": "2026-08-13 09:51:00", "source": "vendor_auth", "description": "Vendor logon: VEND-ACME-03 -> JUMP-OT-01 (24 min, Success)"}, {"event_id": "AUTH-00135", "timestamp": "2026-08-13 11:39:00", "source": "vendor_auth", "description": "Vendor logon: VEND-ACME-03 -> ENG-WKS-02 (39 min, Success)"}, {"event_id": "AUTH-00136", "timestamp": "2026-08-13 12:15:00", "source": "vendor_auth", "description": "Vendor logon: VEND-ACME-03 -> JUMP-OT-01 (42 min, Success)"}, {"event_id": "AUTH-00137", "timestamp": "2026-08-13 12:25:00", "source": "vendor_auth", "description": "Vendor logon: VEND-ACME-03 -> ENG-WKS-04 (21 min, Success)"}, {"event_id": "AUTH-00138", "timestamp": "2026-08-13 12:51:00", "source": "vendor_auth", "description": "Vendor logon: VEND-ACME-03 -> JUMP-OT-01 (32 min, Success)"}, {"event_id": "AUTH-00158", "timestamp": "2026-08-15 01:10:00", "source": "vendor_auth", "description": "Vendor logon: VEND-ACME-03 -> JUMP-OT-01 (140 min, Success)"}, {"event_id": "EDR-00587", "timestamp": "2026-08-15 01:35:00", "source": "edr_telemetry", "description": "EDR alert on JUMP-OT-01: cred_dump_tool.exe (parent svchost.exe), credential_access, severity=High"}, {"event_id": "AUTH-00159", "timestamp": "2026-08-15 04:30:00", "source": "vendor_auth", "description": "Vendor logon: VEND-ACME-03 -> ENG-WKS-02 (95 min, Success)"}, {"event_id": "EDR-00588", "timestamp": "2026-08-15 04:50:00", "source": "edr_telemetry", "description": "EDR alert on ENG-WKS-02: archive_stager.exe (parent cred_dump_tool.exe), collection_staging, severity=High"}, {"event_id": "AUTH-00160", "timestamp": "2026-08-15 07:15:00", "source": "vendor_auth", "description": "Vendor logon: VEND-ACME-03 -> ENG-WKS-04 (110 min, Success)"}, {"event_id": "EDR-00589", "timestamp": "2026-08-15 07:25:00", "source": "edr_telemetry", "description": "EDR alert on ENG-WKS-04: logging_disable.bat (parent cmd.exe), defense_evasion, severity=Critical"}, {"event_id": "OT-01577", "timestamp": "2026-08-15 07:40:00", "source": "ot_ids_historian", "description": "OT alert on PLC-03: unauthorized_write_attempt, deviation=12.5"}, {"event_id": "OT-01578", "timestamp": "2026-08-15 07:55:00", "source": "ot_ids_historian", "description": "OT alert on PLC-03: unauthorized_write_attempt, deviation=14.1"}, {"event_id": "AUTH-00171", "timestamp": "2026-08-15 15:24:00", "source": "vendor_auth", "description": "Vendor logon: VEND-ACME-03 -> ENG-WKS-05 (17 min, Success)"}, {"event_id": "AUTH-00173", "timestamp": "2026-08-15 21:25:00", "source": "vendor_auth", "description": "Vendor logon: VEND-ACME-03 -> HIST-SRV-01 (65 min, Success)"}, {"event_id": "EDR-00590", "timestamp": "2026-08-15 21:35:00", "source": "edr_telemetry", "description": "EDR alert on HIST-SRV-01: archive_stager.exe (parent cred_dump_tool.exe), collection_staging, severity=High"}, {"event_id": "OT-01579", "timestamp": "2026-08-15 21:50:00", "source": "ot_ids_historian", "description": "OT alert on RTU-05: unauthorized_write_attempt, deviation=9.8"}, {"event_id": "AUTH-00174", "timestamp": "2026-08-16 04:50:00", "source": "vendor_auth", "description": "Vendor logon: VEND-ACME-03 -> ENG-WKS-02 (40 min, Success)"}, {"event_id": "OT-01580", "timestamp": "2026-08-16 05:05:00", "source": "ot_ids_historian", "description": "OT alert on PLC-03: unauthorized_write_attempt, deviation=11.0"}, {"event_id": "AUTH-00180", "timestamp": "2026-08-16 12:14:00", "source": "vendor_auth", "description": "Vendor logon: VEND-ACME-03 -> ENG-WKS-05 (23 min, Success)"}, {"event_id": "AUTH-00182", "timestamp": "2026-08-16 12:38:00", "source": "vendor_auth", "description": "Vendor logon: VEND-ACME-03 -> ENG-WKS-05 (19 min, Success)"}, {"event_id": "AUTH-00184", "timestamp": "2026-08-16 14:07:00", "source": "vendor_auth", "description": "Vendor logon: VEND-ACME-03 -> JUMP-OT-01 (38 min, Success)"}, {"event_id": "AUTH-00200", "timestamp": "2026-08-18 11:51:00", "source": "vendor_auth", "description": "Vendor logon: VEND-ACME-03 -> JUMP-OT-01 (11 min, Success)"}, {"event_id": "AUTH-00202", "timestamp": "2026-08-18 13:11:00", "source": "vendor_auth", "description": "Vendor logon: VEND-ACME-03 -> JUMP-OT-01 (50 min, Success)"}, {"event_id": "AUTH-00203", "timestamp": "2026-08-18 13:17:00", "source": "vendor_auth", "description": "Vendor logon: VEND-ACME-03 -> ENG-WKS-02 (15 min, Success)"}, {"event_id": "AUTH-00206", "timestamp": "2026-08-18 14:12:00", "source": "vendor_auth", "description": "Vendor logon: VEND-ACME-03 -> ENG-WKS-02 (11 min, Success)"}, {"event_id": "AUTH-00212", "timestamp": "2026-08-19 11:42:00", "source": "vendor_auth", "description": "Vendor logon: VEND-ACME-03 -> JUMP-OT-01 (10 min, Success)"}, {"event_id": "AUTH-00220", "timestamp": "2026-08-19 16:23:00", "source": "vendor_auth", "description": "Vendor logon: VEND-ACME-03 -> JUMP-OT-01 (22 min, Success)"}, {"event_id": "AUTH-00224", "timestamp": "2026-08-20 09:00:00", "source": "vendor_auth", "description": "Vendor logon: VEND-ACME-03 -> ENG-WKS-04 (25 min, Success)"}, {"event_id": "AUTH-00227", "timestamp": "2026-08-20 10:21:00", "source": "vendor_auth", "description": "Vendor logon: VEND-ACME-03 -> JUMP-OT-01 (24 min, Success)"}, {"event_id": "AUTH-00242", "timestamp": "2026-08-21 11:33:00", "source": "vendor_auth", "description": "Vendor logon: VEND-ACME-03 -> JUMP-OT-01 (21 min, Success)"}, {"event_id": "AUTH-00256", "timestamp": "2026-08-22 15:11:00", "source": "vendor_auth", "description": "Vendor logon: VEND-ACME-03 -> ENG-WKS-03 (40 min, Success)"}, {"event_id": "AUTH-00263", "timestamp": "2026-08-23 14:30:00", "source": "vendor_auth", "description": "Vendor logon: VEND-ACME-03 -> ENG-WKS-05 (33 min, Success)"}, {"event_id": "AUTH-00268", "timestamp": "2026-08-24 09:14:00", "source": "vendor_auth", "description": "Vendor logon: VEND-ACME-03 -> ENG-WKS-01 (24 min, Success)"}, {"event_id": "AUTH-00270", "timestamp": "2026-08-24 11:07:00", "source": "vendor_auth", "description": "Vendor logon: VEND-ACME-03 -> ENG-WKS-02 (18 min, Success)"}, {"event_id": "AUTH-00271", "timestamp": "2026-08-24 12:07:00", "source": "vendor_auth", "description": "Vendor logon: VEND-ACME-03 -> JUMP-OT-01 (36 min, Success)"}, {"event_id": "AUTH-00275", "timestamp": "2026-08-24 13:20:00", "source": "vendor_auth", "description": "Vendor logon: VEND-ACME-03 -> ENG-WKS-02 (14 min, Success)"}, {"event_id": "AUTH-00277", "timestamp": "2026-08-24 14:17:00", "source": "vendor_auth", "description": "Vendor logon: VEND-ACME-03 -> ENG-WKS-04 (25 min, Success)"}, {"event_id": "AUTH-00278", "timestamp": "2026-08-24 15:22:00", "source": "vendor_auth", "description": "Vendor logon: VEND-ACME-03 -> ENG-WKS-03 (8 min, Success)"}, {"event_id": "AUTH-00281", "timestamp": "2026-08-25 08:32:00", "source": "vendor_auth", "description": "Vendor logon: VEND-ACME-03 -> ENG-WKS-05 (35 min, Success)"}, {"event_id": "AUTH-00292", "timestamp": "2026-08-26 07:14:00", "source": "vendor_auth", "description": "Vendor logon: VEND-ACME-03 -> JUMP-OT-01 (17 min, Success)"}, {"event_id": "AUTH-00293", "timestamp": "2026-08-26 09:28:00", "source": "vendor_auth", "description": "Vendor logon: VEND-ACME-03 -> JUMP-OT-01 (35 min, Success)"}, {"event_id": "AUTH-00294", "timestamp": "2026-08-26 09:40:00", "source": "vendor_auth", "description": "Vendor logon: VEND-ACME-03 -> ENG-WKS-01 (3 min, Success)"}], "test_log": [{"test_id": "T01-vendor_auth.csv", "component": "Data generation", "input_condition": "File should exist and be non-empty", "expected_result": "File exists, size > 0", "actual_result": "OK", "status": "PASS"}, {"test_id": "T01-edr_telemetry.csv", "component": "Data generation", "input_condition": "File should exist and be non-empty", "expected_result": "File exists, size > 0", "actual_result": "OK", "status": "PASS"}, {"test_id": "T01-ot_ids_historian.csv", "component": "Data generation", "input_condition": "File should exist and be non-empty", "expected_result": "File exists, size > 0", "actual_result": "OK", "status": "PASS"}, {"test_id": "T01-ground_truth.csv", "component": "Data generation", "input_condition": "File should exist and be non-empty", "expected_result": "File exists, size > 0", "actual_result": "OK", "status": "PASS"}, {"test_id": "T02", "component": "Data quality", "input_condition": "vendor_auth.csv should have no nulls/dupes", "expected_result": "0 nulls, 0 duplicates", "actual_result": "0 nulls, 0 dupes", "status": "PASS"}, {"test_id": "T03", "component": "Supervised ML", "input_condition": "Model results should report full metric set", "expected_result": "Keys present: {'confusion_matrix', 'recall', 'f1', 'precision', 'roc_auc'}", "actual_result": "Present", "status": "PASS"}, {"test_id": "T04", "component": "UBA/anomaly baselining", "input_condition": "UBA should flag at least one true compromised session", "expected_result": "recall > 0", "actual_result": "recall = 0.833", "status": "PASS"}, {"test_id": "T05", "component": "Incident timeline", "input_condition": "Timeline should meet charter Objective 1 target", "expected_result": ">=6 events across >=3 sources", "actual_result": "47 events, 3 sources", "status": "PASS"}, {"test_id": "T06", "component": "Simulation", "input_condition": "Combined controls should reduce mean blast radius vs baseline", "expected_result": "combined < baseline", "actual_result": "1.52 < 8.03", "status": "PASS"}, {"test_id": "T07", "component": "Text mining/NLP", "input_condition": "Every advisory should yield >=1 extracted tactic", "expected_result": "all docs >=1 tactic", "actual_result": "OK", "status": "PASS"}, {"test_id": "T08", "component": "Predictive/adversarial", "input_condition": "Charter requires >=3 adversarial cases", "expected_result": ">=3 cases", "actual_result": "3 cases", "status": "PASS"}]};
+
+function fmtTs(ts){ return ts.replace('T',' ').slice(0,16); }
+function riskBadge(score){
+  if(score >= 0.9) return '<span class="badge crit">'+score.toFixed(3)+'</span>';
+  if(score >= 0.5) return '<span class="badge high">'+score.toFixed(3)+'</span>';
+  if(score >= 0.2) return '<span class="badge med">'+score.toFixed(3)+'</span>';
+  return '<span class="badge low">'+score.toFixed(3)+'</span>';
+}
+
+const pages = {
+  overview: () => {
+    const eda = DATA.eda_summary, sm = DATA.supervised_model_results, uba = DATA.uba_results, tl = DATA.incident_timeline_summary;
+    const totalRows = Object.values(eda.quality_log).reduce((a,v)=>a+v.rows,0);
+    return `
+      <h1>Case overview</h1>
+      <div class="pagesub">28-day case window · vendor account under investigation: <b>${tl.suspect_account}</b></div>
+      <div class="grid cols-4">
+        <div class="card stat"><div class="label">Events ingested</div><div class="value">${totalRows.toLocaleString()}</div><div class="note">across 3 log sources</div></div>
+        <div class="card stat"><div class="label">Correlated timeline events</div><div class="value">${tl.n_cross_referenced_events}</div><div class="note">${tl.n_distinct_sources} sources</div></div>
+        <div class="card stat"><div class="label">UBA flagged sessions</div><div class="value">${uba.sessions_flagged}</div><div class="note">${(uba.recall_of_injected_compromise_at_threshold*100).toFixed(0)}% recall on known compromise</div></div>
+        <div class="card stat"><div class="label">Compromise confidence</div><div class="value" style="color:var(--crit)">${tl.overall_confidence}</div><div class="note">5/5 corroborating evidence types</div></div>
+      </div>
+      <section style="margin-top:22px">
+        <h2>Investigation verdict</h2>
+        <div class="verdict">
+          <div class="conf">HIGH CONFIDENCE — vendor remote-access pathway compromised and used to reach ICS assets</div>
+          <p style="margin:8px 0 0 0;color:var(--text);font-size:13px;line-height:1.6">
+            Account <b>${tl.suspect_account}</b> shows a coordinated pattern of off-hours logons, atypical source IP,
+            credential-access and defense-evasion EDR alerts, lateral movement across ${tl.affected_users_assets.engineering_hosts_touched.length}
+            hosts, and unauthorized write attempts on ${tl.affected_users_assets.ot_assets_flagged.join(', ')}.
+            Recommended containment actions are listed on the Incident timeline page.
+          </p>
+        </div>
+      </section>
+      <section>
+        <h2>Module status</h2>
+        <div class="grid cols-3">
+          <div class="card"><b>Supervised model</b><div class="footnote">Logistic regression, ROC-AUC ${sm.results.logistic_regression.roc_auc} on held-out test set. See Vendor sessions.</div></div>
+          <div class="card"><b>Propagation simulation</b><div class="footnote">4 control scenarios, 200 Monte Carlo runs each. See Simulation.</div></div>
+          <div class="card"><b>Adversarial testing</b><div class="footnote">${DATA.predictive_adversarial_results.n_of_cases_evading_detection} evasion cases succeeded. See Adversarial testing.</div></div>
+        </div>
+      </section>
+    `;
+  },
+
+  sessions: () => {
+    const rows = DATA.top_risk_sessions.map(r => `
+      <tr><td>${r.session_id}</td><td>${r.vendor_account}</td><td>${fmtTs(r.timestamp)}</td>
+      <td>${r.destination_host}</td><td>${riskBadge(r.risk_score)}</td>
+      <td>${r.is_compromised_session ? '<span class="badge crit">confirmed</span>' : '<span class="badge ok">clean</span>'}</td></tr>`).join('');
+    const sm = DATA.supervised_model_results;
+    return `
+      <h1>Vendor sessions &amp; risk scoring</h1>
+      <div class="pagesub">Supervised model: logistic regression vs. decision tree, stratified 70/30 split, threshold 0.3</div>
+      <div class="grid cols-4" style="margin-bottom:20px">
+        <div class="card stat"><div class="label">ROC-AUC (logistic)</div><div class="value">${sm.results.logistic_regression.roc_auc}</div></div>
+        <div class="card stat"><div class="label">Precision</div><div class="value">${sm.results.logistic_regression.precision}</div></div>
+        <div class="card stat"><div class="label">Recall</div><div class="value">${sm.results.logistic_regression.recall}</div></div>
+        <div class="card stat"><div class="label">Positive class</div><div class="value">${sm.class_balance.positive}/${sm.class_balance.positive+sm.class_balance.negative}</div><div class="note">severe imbalance — see limitations</div></div>
+      </div>
+      <section>
+        <h2>Highest-risk vendor sessions (full-dataset scoring)</h2>
+        <table><thead><tr><th>Session</th><th>Account</th><th>Timestamp</th><th>Destination</th><th>Risk score</th><th>Ground truth</th></tr></thead>
+        <tbody>${rows}</tbody></table>
+        <div class="footnote">Note: session S00321 scores low despite being part of the injected compromise window — it has no corroborating EDR alert on its destination host, illustrating why the UBA and timeline modules exist alongside this model rather than replacing analyst correlation.</div>
+      </section>
+    `;
+  },
+
+  anomalies: () => {
+    const rows = DATA.uba_top_anomalies.map(r => `
+      <tr><td>${r.session_id}</td><td>${r.vendor_account}</td><td>${fmtTs(r.timestamp)}</td>
+      <td>${r.destination_host}</td><td>${r.uba_deviation_score.toFixed(2)}</td>
+      <td>${r.is_compromised_session ? '<span class="badge crit">confirmed</span>' : '<span class="badge low">baseline dev.</span>'}</td></tr>`).join('');
+    return `
+      <h1>Behavioural anomalies (UBA)</h1>
+      <div class="pagesub">Peer-group baselining with rule-based deviation scoring — 95th-percentile threshold = ${DATA.uba_results.uba_threshold_95th_pct}</div>
+      <section><h2>Top flagged sessions by deviation score</h2>
+      <table><thead><tr><th>Session</th><th>Account</th><th>Timestamp</th><th>Destination</th><th>Deviation score</th><th>Status</th></tr></thead>
+      <tbody>${rows}</tbody></table></section>
+    `;
+  },
+
+  timeline: () => {
+    const tl = DATA.incident_timeline_summary;
+    const items = DATA.correlated_timeline.map(e => `
+      <div class="timeline-item">
+        <div class="ts">${fmtTs(e.timestamp)}</div>
+        <div class="src ${e.source}">${e.source.replace('_',' ')}</div>
+        <div>${e.description}</div>
+      </div>`).join('');
+    const actions = tl.containment_eradication_recovery_actions.map(a => `<li style="margin-bottom:6px">${a}</li>`).join('');
+    return `
+      <h1>Incident timeline</h1>
+      <div class="pagesub">${tl.n_cross_referenced_events} correlated events across ${tl.n_distinct_sources} sources · window ${fmtTs(tl.investigation_window[0])} → ${fmtTs(tl.investigation_window[1])}</div>
+      <div class="grid cols-2">
+        <section>
+          <h2>Cross-referenced event log</h2>
+          <div class="card" style="max-height:520px;overflow-y:auto">${items}</div>
+        </section>
+        <section>
+          <h2>Containment / eradication / recovery</h2>
+          <div class="card"><ol style="margin:0;padding-left:18px;font-size:13px;line-height:1.6">${actions}</ol></div>
+          <h2 style="margin-top:18px">Affected assets</h2>
+          <div class="card">
+            <div class="footnote" style="margin-top:0">Engineering hosts touched</div>
+            <div class="pill-row">${tl.affected_users_assets.engineering_hosts_touched.map(h=>`<span class="pill">${h}</span>`).join('')}</div>
+            <div class="footnote">OT assets flagged</div>
+            <div class="pill-row">${tl.affected_users_assets.ot_assets_flagged.map(h=>`<span class="pill" style="color:var(--crit);border-color:var(--crit)">${h}</span>`).join('')}</div>
+          </div>
+        </section>
+      </div>
+    `;
+  },
+
+  simulation: () => {
+    const sim = DATA.simulation_results.scenario_results;
+    const maxRadius = Math.max(...Object.values(sim).map(s=>s.mean_blast_radius));
+    const colors = {baseline_no_controls:'var(--crit)', network_segmentation:'var(--high)', vendor_mfa:'var(--low)', segmentation_plus_mfa:'var(--ok)'};
+    const labels = {baseline_no_controls:'Baseline (no controls)', network_segmentation:'Network segmentation', vendor_mfa:'Vendor MFA', segmentation_plus_mfa:'Segmentation + MFA'};
+    const bars = Object.entries(sim).map(([k,v]) => `
+      <div class="bar-row">
+        <div class="bar-label">${labels[k]}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:${(v.mean_blast_radius/maxRadius*100)}%;background:${colors[k]}"></div></div>
+        <div class="bar-val">${v.mean_blast_radius}</div>
+      </div>`).join('');
+    return `
+      <h1>Propagation / control-impact simulation</h1>
+      <div class="pagesub">Monte Carlo hop-based propagation, 200 iterations per scenario, from compromised vendor entry point</div>
+      <section>
+        <h2>Mean blast radius by control scenario</h2>
+        <div class="card">${bars}</div>
+        <div class="footnote">Blast radius = mean number of additional assets reached from the vendor entry point across 200 simulated runs.</div>
+      </section>
+      <section>
+        <h2>Scenario detail</h2>
+        <table><thead><tr><th>Scenario</th><th>Mean radius</th><th>P90</th><th>Max</th><th>% reaching any OT asset</th></tr></thead>
+        <tbody>${Object.entries(sim).map(([k,v])=>`<tr><td>${labels[k]}</td><td>${v.mean_blast_radius}</td><td>${v.p90_blast_radius}</td><td>${v.max_blast_radius}</td><td>${(v.pct_reaching_any_ot_asset*100).toFixed(1)}%</td></tr>`).join('')}</tbody></table>
+      </section>
+      <section>
+        <h2>Assumptions</h2>
+        <div class="card"><ul style="margin:0;padding-left:18px;font-size:12.5px;color:var(--muted);line-height:1.7">${DATA.simulation_results.assumptions.map(a=>`<li>${a}</li>`).join('')}</ul></div>
+      </section>
+    `;
+  },
+
+  intel: () => {
+    const nlp = DATA.nlp_textmining_results;
+    const docs = Object.entries(nlp.extraction_per_document).map(([id, e]) => `
+      <div class="intel-doc">
+        <div class="id">${id}</div>
+        <div class="pill-row">${e.tactics_mentioned.map(t=>`<span class="pill">${t}</span>`).join('')}</div>
+        <div class="footnote" style="margin-top:8px">${e.indicators.join(' · ')}</div>
+      </div>`).join('');
+    const links = nlp.case_to_intelligence_links.map(l => `
+      <div class="timeline-item" style="grid-template-columns:1fr 1fr 100px">
+        <div>${l.case_evidence.replace(/_/g,' ')}</div>
+        <div style="color:var(--muted)">${l.matched_intel_indicator}</div>
+        <div class="src edr_telemetry">${l.source_advisories.join(', ')}</div>
+      </div>`).join('');
+    return `
+      <h1>Threat intelligence</h1>
+      <div class="pagesub">${nlp.corpus_size} synthetic advisory documents mined for ATT&amp;CK-for-ICS tactics and indicators</div>
+      <div class="grid cols-2">
+        <section><h2>Advisory corpus</h2>${docs}</section>
+        <section>
+          <h2>Case evidence ↔ intelligence links</h2>
+          <div class="card">${links}</div>
+          <h2 style="margin-top:18px">Limitations</h2>
+          <div class="card"><ul style="margin:0;padding-left:18px;font-size:12.5px;color:var(--muted);line-height:1.7">${nlp.limitations.map(l=>`<li>${l}</li>`).join('')}</ul></div>
+        </section>
+      </div>
+    `;
+  },
+
+  adversarial: () => {
+    const pa = DATA.predictive_adversarial_results;
+    const cases = pa.adversarial_cases.map(c => `
+      <div class="adv-case">
+        <div class="name">${c.case}</div>
+        <div class="adv-scores">
+          <span>original: ${riskBadge(c.original_score)}</span>
+          <span class="arrow">→</span>
+          <span>after evasion: ${riskBadge(c.evasion_score)}</span>
+          ${c.evaded_at_alert_threshold ? '<span class="badge crit">EVADED ALERT THRESHOLD</span>' : '<span class="badge ok">still detected</span>'}
+        </div>
+      </div>`).join('');
+    const gov = pa.governance_and_drift_controls.map(g=>`<li style="margin-bottom:6px">${g}</li>`).join('');
+    return `
+      <h1>Adversarial &amp; predictive testing</h1>
+      <div class="pagesub">Alert threshold ${pa.alert_threshold} · ${pa.sessions_at_or_above_threshold} sessions currently at/above threshold</div>
+      <section><h2>Evasion cases (${pa.n_of_cases_evading_detection} succeeded)</h2><div class="card">${cases}</div></section>
+      <section><h2>Governance &amp; drift controls</h2><div class="card"><ul style="margin:0;padding-left:18px;font-size:13px;line-height:1.7">${gov}</ul></div></section>
+    `;
+  },
+
+  qa: () => {
+    const rows = DATA.test_log.map(t => `
+      <tr><td>${t.test_id}</td><td>${t.component}</td><td>${t.input_condition}</td>
+      <td>${t.expected_result}</td><td>${t.actual_result}</td>
+      <td>${t.status==='PASS' ? '<span class="badge ok">PASS</span>' : '<span class="badge crit">FAIL</span>'}</td></tr>`).join('');
+    const passCount = DATA.test_log.filter(t=>t.status==='PASS').length;
+    return `
+      <h1>Test log</h1>
+      <div class="pagesub">${passCount}/${DATA.test_log.length} automated checks passing across all modules</div>
+      <table><thead><tr><th>ID</th><th>Component</th><th>Condition</th><th>Expected</th><th>Actual</th><th>Status</th></tr></thead>
+      <tbody>${rows}</tbody></table>
+    `;
+  },
+};
+
+function render(page){
+  document.querySelectorAll('.navitem').forEach(n => n.classList.toggle('active', n.dataset.page===page));
+  document.getElementById('main').innerHTML = pages[page]();
+}
+
+document.querySelectorAll('.navitem').forEach(n => {
+  n.addEventListener('click', () => { if(DATA) render(n.dataset.page); });
+});
+
+render('overview');
+</script>
+</body>
+</html>
