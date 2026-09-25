@@ -1,0 +1,48 @@
+{
+  "note": "Extends the real predictive_adversarial_results.json (logistic regression) with the same base case and same 3 perturbations tested against a decision tree",
+  "base_case_session": "S00322",
+  "base_case_real_lr_score": 1,
+  "methodology_note": "Decision tree trained on the FULL dataset (not the 70/30 split), for consistency with how predictive_adversarial.py already refits the logistic regression on full data rather than reusing the split model - sklearn's exact train_test_split row assignment cannot be reproduced in R regardless of matching random seeds, since R and Python use different RNG algorithms",
+  "decision_tree_adversarial_cases": [
+    {
+      "case": "Living-off-the-land tooling (avoids known-bad EDR signatures)",
+      "original_score": 1,
+      "evasion_score": 1,
+      "evaded_at_alert_threshold": false
+    },
+    {
+      "case": "Living-off-the-land + timing/duration mimicry",
+      "original_score": 1,
+      "evasion_score": 0,
+      "evaded_at_alert_threshold": true
+    },
+    {
+      "case": "Full behavioural mimicry: LOTL tooling + timing + duration + single-host reach",
+      "original_score": 1,
+      "evasion_score": 0,
+      "evaded_at_alert_threshold": true
+    }
+  ],
+  "decision_tree_n_evaded": "2/3",
+  "logistic_regression_comparison": [
+    {
+      "case": "LOTL tooling",
+      "original_score": 1,
+      "evasion_score": 1,
+      "evaded": false
+    },
+    {
+      "case": "LOTL + timing/duration mimicry",
+      "original_score": 1,
+      "evasion_score": 0.539,
+      "evaded": false
+    },
+    {
+      "case": "Full behavioural mimicry",
+      "original_score": 1,
+      "evasion_score": 0.003,
+      "evaded": true
+    }
+  ],
+  "logistic_regression_n_evaded": "1/3 (from predictive_adversarial_results.json)"
+}
