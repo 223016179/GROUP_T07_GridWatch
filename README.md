@@ -39,9 +39,7 @@ primary Python pipeline — see `03_notebooks/` for both.
   - `GridWatch_Session5_and_3-4_Closure.docx`
 
 ## Environment
-See `requirements.txt` (Python) and `project.Rproj` (R). Verify both against
-your actual script imports before final submission.
+See `requirements.txt` (Python) and `project.Rproj` (R).
 
 ## Repository
-Hosted at github.com/223016179/GROUP_T07_GridWatch. Both members should confirm
-collaborator access before submission.
+Hosted at github.com/223016179/GROUP_T07_GridWatch.
