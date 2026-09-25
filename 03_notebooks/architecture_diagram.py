@@ -33,7 +33,7 @@ def arrow(x1, y1, x2, y2):
 box(0.3, 7.5, 2.0, 1.0, "Vendor auth log\n(synthetic, 323 rows)", "implemented")
 box(2.6, 7.5, 2.0, 1.0, "EDR telemetry\n(synthetic, 590 rows)", "implemented")
 box(4.9, 7.5, 2.0, 1.0, "OT IDS/historian\n(synthetic, 1580 rows)", "implemented")
-box(7.2, 7.5, 2.0, 1.0, "Threat-intel corpus\n(4 of 15-30 target docs)", "planned")
+box(7.2, 7.5, 2.0, 1.0, "Threat-intel corpus\n(20 of 15-30 target docs)", "implemented")
 
 arrow(1.3, 7.5, 1.3, 6.6)
 arrow(3.6, 7.5, 3.6, 6.6)

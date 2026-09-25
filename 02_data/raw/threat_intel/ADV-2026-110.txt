@@ -1,0 +1,11 @@
+Advisory ADV-2026-110
+Threat actor / activity cluster: Suspected supply-chain intrusion set (SCIS-4)
+
+Summary:
+Analysts assess with moderate confidence that SCIS-4 has begun establishing a secondary command-and-control channel over a protocol commonly permitted through OT firewalls, in an apparent attempt to maintain access if the primary vendor-session pathway is closed.
+
+Associated ATT&CK for ICS tactics: Command and Control, Persistence
+
+Indicators observed:
+- secondary C2 channel over permitted OT firewall protocol
+- beaconing observed after primary vendor account was disabled

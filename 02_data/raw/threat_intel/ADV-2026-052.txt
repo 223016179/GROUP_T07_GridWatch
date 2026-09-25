@@ -1,0 +1,11 @@
+Advisory ADV-2026-052
+Threat actor / activity cluster: Unattributed activity cluster (tracked internally as CLUSTER-BRONZE)
+
+Summary:
+Additional CLUSTER-BRONZE activity shows the group establishing a command-and-control channel disguised as routine vendor telemetry traffic, using regular beacon intervals timed to blend with legitimate remote-maintenance polling.
+
+Associated ATT&CK for ICS tactics: Command and Control, Defense Evasion
+
+Indicators observed:
+- beacon interval matching legitimate vendor polling cadence
+- outbound traffic to domain registered within prior 30 days

@@ -1,0 +1,12 @@
+Advisory ADV-2026-040
+Threat actor / activity cluster: Unattributed activity cluster (tracked internally as CLUSTER-COBALT)
+
+Summary:
+A cluster of intrusions against distribution-utility engineering networks has been observed beginning with phishing emails delivering a macro-enabled document, followed by execution of a living-off-the-land binary to establish persistence via a scheduled task on the initial foothold host before any attempt to move toward OT segments.
+
+Associated ATT&CK for ICS tactics: Initial Access, Execution, Persistence
+
+Indicators observed:
+- macro-enabled document delivered via email
+- scheduled task created outside change window
+- living-off-the-land binary invoked with encoded arguments

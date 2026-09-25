@@ -78,10 +78,9 @@ result = {
     "topics": topics,
     "case_to_intelligence_links": case_to_intel_links,
     "limitations": [
-        "Corpus is small (n=4 synthetic advisories) for this milestone; charter target is 15-30 - "
-        "expanding the corpus is tracked in the backlog (Section 14).",
+        "Corpus is n=20 synthetic advisories, within the charter's 15-30 target.",
         "Keyword/rule-based extraction is precise but not recall-optimal; topic modelling on a "
-        "corpus this small is illustrative rather than statistically robust.",
+        "corpus this size remains indicative rather than a large-scale statistical result.",
     ],
 }
 

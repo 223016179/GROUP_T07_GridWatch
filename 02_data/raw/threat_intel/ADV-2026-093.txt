@@ -1,0 +1,11 @@
+Advisory ADV-2026-093
+Threat actor / activity cluster: Suspected activity cluster (tracked internally as CLUSTER-INDIGO)
+
+Summary:
+CLUSTER-INDIGO has been observed using a renamed system utility to evade signature-based detection while performing discovery of network topology and connected OT assets, a defense-evasion technique layered on top of routine reconnaissance.
+
+Associated ATT&CK for ICS tactics: Defense Evasion, Discovery
+
+Indicators observed:
+- system utility executed under a renamed binary
+- network topology enumeration from engineering host

@@ -1,0 +1,11 @@
+Advisory ADV-2026-099
+Threat actor / activity cluster: Unattributed
+
+Summary:
+Operators are advised that persistence in several reported intrusions was achieved through creation of a new local account on the engineering workstation used as the initial vendor access point, rather than through malware requiring ongoing execution.
+
+Associated ATT&CK for ICS tactics: Persistence
+
+Indicators observed:
+- new local account created on engineering workstation
+- account creation outside documented change request

@@ -1,0 +1,11 @@
+Advisory ADV-2026-069
+Threat actor / activity cluster: Unattributed
+
+Summary:
+Analysts documented an intrusion in which the actor disabled automated alerting on a security information and event management console prior to escalating access, an inhibit-response-function technique intended to delay defender detection during later stages.
+
+Associated ATT&CK for ICS tactics: Inhibit Response Function, Defense Evasion
+
+Indicators observed:
+- SIEM alert rule disabled by non-administrative account
+- gap in alert volume preceding confirmed compromise window

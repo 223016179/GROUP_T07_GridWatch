@@ -1,0 +1,11 @@
+Advisory ADV-2026-081
+Threat actor / activity cluster: Unattributed activity cluster (tracked internally as CLUSTER-COBALT)
+
+Summary:
+CLUSTER-COBALT activity culminated, in one documented case, in an attempted impact against process availability through repeated unauthorized controller mode changes, though the attempt was interrupted before any sustained disruption occurred.
+
+Associated ATT&CK for ICS tactics: Impair Process Control, Impact
+
+Indicators observed:
+- unauthorized controller mode change
+- repeated mode-change attempts within short interval

@@ -23,7 +23,7 @@ primary Python pipeline — see `03_notebooks/` for both.
 | `03_notebooks/` | Primary Python pipeline (architecture_diagram, eda, generate_data, generate_threat_intel, nlp_textmining, predictive_adversarial, simulation, supervised_model, test_suite, timeline, uba) plus independent R validation scripts (uba_workflow.R, rscript_for_simulation.r, adversarial_decision_tree.R) | Complete — see note below on rnotebook_text_mining.md |
 | `04_models/` | Supervised model + UBA results (Python and R) and flagged sessions | Complete |
 | `05_simulation/` | Monte Carlo control-scenario simulation results (Python, 200 iter; R, 1000 iter) | Complete |
-| `06_text_mining/` | NLP/threat-intel extraction results | Pipeline complete — corpus is 4 documents against the charter's 15–30 target; see Known Gaps |
+| `06_text_mining/` | NLP/threat-intel extraction results | Pipeline complete — corpus is 20 documents, within the charter's 15–30 target |
 | `07_dashboard/` | Local dashboard prototype | Complete |
 | `08_outputs/` | Final integrated outputs: incident timeline summary, EDA summary, predictive/adversarial results, full figure set (fig0–fig8) | Complete |
 | `09_documentation/` | Implementation plan | **Incomplete — see below** |
@@ -33,9 +33,6 @@ primary Python pipeline — see `03_notebooks/` for both.
 - **`03_notebooks/rnotebook_text_mining.md`** is currently a raw console-paste of
   the placeholder seed corpus, not the finished `text_mining_workflow.R` script.
   Replace it with the actual script file.
-- **Threat-intelligence corpus** is still 4 documents against the charter's
-  15–30 document target. Stated explicitly as an open limitation in the final
-  report rather than presented as resolved.
 - **`09_documentation/` is missing three files** that exist and are ready to add:
   - `GridWatch_Final_Report.pdf` (and/or `.docx`) — the Milestone 3 submission itself
   - `GridWatch_Sessions1-10_Evidence_Audit.docx`

@@ -1,0 +1,10 @@
+Advisory ADV-2026-128
+Threat actor / activity cluster: Unattributed
+
+Summary:
+Operators are reminded that early indicators of vendor-account misuse are frequently subtle and single-source; sustained monitoring correlating authentication, endpoint, and OT-side telemetry remains the most reliable basis for escalation, consistent with prior guidance in this advisory series.
+
+Associated ATT&CK for ICS tactics: Discovery, Collection
+
+Indicators observed:
+- low-confidence single-source anomaly requiring cross-log correlation before escalation

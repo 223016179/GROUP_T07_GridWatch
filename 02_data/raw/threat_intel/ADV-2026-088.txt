@@ -1,0 +1,11 @@
+Advisory ADV-2026-088
+Threat actor / activity cluster: Unattributed
+
+Summary:
+Reporting highlights a pattern in which initial access through a compromised vendor account is followed almost immediately by execution of a credential-harvesting tool, suggesting the activity is opportunistic rather than the product of extended pre-positioning.
+
+Associated ATT&CK for ICS tactics: Initial Access, Credential Access, Execution
+
+Indicators observed:
+- credential-harvesting tool execution within minutes of logon
+- vendor account authenticating from previously unseen source IP

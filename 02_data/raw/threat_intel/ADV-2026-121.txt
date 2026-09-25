@@ -1,0 +1,11 @@
+Advisory ADV-2026-121
+Threat actor / activity cluster: Suspected activity cluster (tracked internally as CLUSTER-INDIGO)
+
+Summary:
+CLUSTER-INDIGO's initial-access technique in two reported cases involved exploitation of a exposed remote-desktop service on a vendor jump host rather than credential compromise, followed by the same archive-staging behaviour observed in earlier reporting.
+
+Associated ATT&CK for ICS tactics: Initial Access, Collection
+
+Indicators observed:
+- exposed remote-desktop service reachable from external network
+- archive-staging utility execution matching prior CLUSTER-INDIGO reporting

@@ -1,0 +1,11 @@
+Advisory ADV-2026-063
+Threat actor / activity cluster: Suspected activity cluster (tracked internally as CLUSTER-INDIGO)
+
+Summary:
+A newly tracked cluster has been observed staging collected engineering documents into password-protected archives on jump hosts before transferring them to external infrastructure, consistent with a collection-to-exfiltration handoff.
+
+Associated ATT&CK for ICS tactics: Collection, Exfiltration
+
+Indicators observed:
+- password-protected archive created on jump host
+- large outbound transfer immediately following archive creation

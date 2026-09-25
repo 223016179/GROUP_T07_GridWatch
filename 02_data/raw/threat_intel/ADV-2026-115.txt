@@ -1,0 +1,11 @@
+Advisory ADV-2026-115
+Threat actor / activity cluster: Unattributed
+
+Summary:
+A distribution-utility operator reported an attempted impact event in which an actor issued unauthorized commands to a remote terminal unit; the attempt was detected and blocked by protocol-aware monitoring before any setpoint change was accepted by the field device.
+
+Associated ATT&CK for ICS tactics: Impact, Impair Process Control
+
+Indicators observed:
+- unauthorized RTU command rejected by protocol monitor
+- command source outside authorized engineering range

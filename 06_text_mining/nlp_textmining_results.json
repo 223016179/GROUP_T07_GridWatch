@@ -1,5 +1,5 @@
 {
-  "corpus_size": 4,
+  "corpus_size": 20,
   "extraction_per_document": {
     "ADV-2026-014": {
       "tactics_mentioned": [
@@ -48,33 +48,195 @@
       "indicators": [
         "single-source anomaly without cross-log corroboration"
       ]
+    },
+    "ADV-2026-040": {
+      "tactics_mentioned": [
+        "Initial Access",
+        "Execution",
+        "Persistence"
+      ],
+      "indicators": [
+        "macro-enabled document delivered via email",
+        "scheduled task created outside change window",
+        "living-off-the-land binary invoked with encoded arguments"
+      ]
+    },
+    "ADV-2026-047": {
+      "tactics_mentioned": [
+        "Privilege Escalation"
+      ],
+      "indicators": [
+        "reuse of cached administrative credential across sessions",
+        "local account added to administrators group outside change window"
+      ]
+    },
+    "ADV-2026-052": {
+      "tactics_mentioned": [
+        "Evasion",
+        "Defense Evasion",
+        "Command and Control"
+      ],
+      "indicators": [
+        "beacon interval matching legitimate vendor polling cadence",
+        "outbound traffic to domain registered within prior 30 days"
+      ]
+    },
+    "ADV-2026-058": {
+      "tactics_mentioned": [
+        "Discovery"
+      ],
+      "indicators": [
+        "sequential enumeration of network shares",
+        "historian schema queries from non-engineering account"
+      ]
+    },
+    "ADV-2026-063": {
+      "tactics_mentioned": [
+        "Collection"
+      ],
+      "indicators": [
+        "password-protected archive created on jump host",
+        "large outbound transfer immediately following archive creation"
+      ]
+    },
+    "ADV-2026-069": {
+      "tactics_mentioned": [
+        "Evasion",
+        "Defense Evasion",
+        "Inhibit Response Function"
+      ],
+      "indicators": [
+        "SIEM alert rule disabled by non-administrative account",
+        "gap in alert volume preceding confirmed compromise window"
+      ]
+    },
+    "ADV-2026-074": {
+      "tactics_mentioned": [
+        "Lateral Movement"
+      ],
+      "indicators": [
+        "pass-the-hash authentication pattern across engineering hosts",
+        "shared local administrator credential reused across multiple assets"
+      ]
+    },
+    "ADV-2026-081": {
+      "tactics_mentioned": [
+        "Impair Process Control",
+        "Impact"
+      ],
+      "indicators": [
+        "unauthorized controller mode change",
+        "repeated mode-change attempts within short interval"
+      ]
+    },
+    "ADV-2026-088": {
+      "tactics_mentioned": [
+        "Initial Access",
+        "Execution"
+      ],
+      "indicators": [
+        "credential-harvesting tool execution within minutes of logon",
+        "vendor account authenticating from previously unseen source IP"
+      ]
+    },
+    "ADV-2026-093": {
+      "tactics_mentioned": [
+        "Evasion",
+        "Defense Evasion",
+        "Discovery"
+      ],
+      "indicators": [
+        "system utility executed under a renamed binary",
+        "network topology enumeration from engineering host"
+      ]
+    },
+    "ADV-2026-099": {
+      "tactics_mentioned": [
+        "Execution",
+        "Persistence"
+      ],
+      "indicators": [
+        "new local account created on engineering workstation",
+        "account creation outside documented change request"
+      ]
+    },
+    "ADV-2026-104": {
+      "tactics_mentioned": [
+        "Discovery",
+        "Collection",
+        "Impact"
+      ],
+      "indicators": [
+        "bulk export of historian trend data",
+        "queries spanning multi-month historical range from non-analyst account"
+      ]
+    },
+    "ADV-2026-110": {
+      "tactics_mentioned": [
+        "Persistence",
+        "Command and Control"
+      ],
+      "indicators": [
+        "secondary C2 channel over permitted OT firewall protocol",
+        "beaconing observed after primary vendor account was disabled"
+      ]
+    },
+    "ADV-2026-115": {
+      "tactics_mentioned": [
+        "Impair Process Control",
+        "Impact"
+      ],
+      "indicators": [
+        "unauthorized RTU command rejected by protocol monitor",
+        "command source outside authorized engineering range"
+      ]
+    },
+    "ADV-2026-121": {
+      "tactics_mentioned": [
+        "Initial Access",
+        "Execution",
+        "Collection"
+      ],
+      "indicators": [
+        "exposed remote-desktop service reachable from external network",
+        "archive-staging utility execution matching prior CLUSTER-INDIGO reporting"
+      ]
+    },
+    "ADV-2026-128": {
+      "tactics_mentioned": [
+        "Discovery",
+        "Collection"
+      ],
+      "indicators": [
+        "low-confidence single-source anomaly requiring cross-log correlation before escalation"
+      ]
     }
   },
   "topics": [
     {
       "topic": 0,
       "top_terms": [
-        "corroboration",
-        "activity",
-        "process",
-        "vendor",
-        "collection",
-        "authentication",
-        "setpoint",
-        "unauthorized"
+        "execution",
+        "initial",
+        "persistence",
+        "access",
+        "account",
+        "credential",
+        "new",
+        "harvesting"
       ]
     },
     {
       "topic": 1,
       "top_terms": [
-        "access",
-        "credential",
-        "engineering",
         "cluster",
-        "reach",
-        "utility",
+        "activity",
+        "observed",
         "vendor",
-        "initial"
+        "actor",
+        "engineering",
+        "collection",
+        "advisory"
       ]
     }
   ],
@@ -97,26 +259,32 @@
       "case_evidence": "defense_evasion_edr_alert",
       "matched_intel_indicator": "local logging service disabled shortly after logon",
       "source_advisories": [
-        "ADV-2026-021"
+        "ADV-2026-021",
+        "ADV-2026-047",
+        "ADV-2026-074",
+        "ADV-2026-099"
       ]
     },
     {
       "case_evidence": "ot_unauthorized_write",
       "matched_intel_indicator": "unauthorized setpoint write attempt",
       "source_advisories": [
-        "ADV-2026-027"
+        "ADV-2026-027",
+        "ADV-2026-081",
+        "ADV-2026-115"
       ]
     },
     {
       "case_evidence": "lateral_movement_multi_host",
       "matched_intel_indicator": "sequential authentication to multiple engineering workstations",
       "source_advisories": [
-        "ADV-2026-021"
+        "ADV-2026-021",
+        "ADV-2026-058"
       ]
     }
   ],
   "limitations": [
-    "Corpus is small (n=4 synthetic advisories) for this milestone; charter target is 15-30 - expanding the corpus is tracked in the backlog (Section 14).",
-    "Keyword/rule-based extraction is precise but not recall-optimal; topic modelling on a corpus this small is illustrative rather than statistically robust."
+    "Corpus is n=20 synthetic advisories, within the charter's 15-30 target.",
+    "Keyword/rule-based extraction is precise but not recall-optimal; topic modelling on a corpus this size remains indicative rather than a large-scale statistical result."
   ]
 }

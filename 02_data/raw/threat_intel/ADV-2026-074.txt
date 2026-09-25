@@ -1,0 +1,11 @@
+Advisory ADV-2026-074
+Threat actor / activity cluster: Suspected supply-chain intrusion set (SCIS-4)
+
+Summary:
+Operators using the same remote-maintenance platform previously linked to SCIS-4 are advised that lateral movement in observed cases relied on pass-the-hash techniques against engineering workstations sharing a common local administrator credential.
+
+Associated ATT&CK for ICS tactics: Lateral Movement, Credential Access
+
+Indicators observed:
+- pass-the-hash authentication pattern across engineering hosts
+- shared local administrator credential reused across multiple assets

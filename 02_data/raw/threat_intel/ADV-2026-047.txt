@@ -1,0 +1,11 @@
+Advisory ADV-2026-047
+Threat actor / activity cluster: Suspected supply-chain intrusion set (SCIS-4)
+
+Summary:
+Follow-on reporting on SCIS-4 describes privilege-escalation attempts on jump hosts used by third-party maintenance vendors, exploiting locally cached administrative credentials left behind by legitimate support sessions rather than any software vulnerability.
+
+Associated ATT&CK for ICS tactics: Privilege Escalation, Credential Access
+
+Indicators observed:
+- reuse of cached administrative credential across sessions
+- local account added to administrators group outside change window

@@ -1,0 +1,11 @@
+Advisory ADV-2026-058
+Threat actor / activity cluster: Unattributed
+
+Summary:
+Multiple energy-sector operators reported discovery-phase activity consisting of systematic enumeration of engineering workstation shares and historian database schemas shortly after an anomalous vendor logon, without any immediately observed data exfiltration.
+
+Associated ATT&CK for ICS tactics: Discovery
+
+Indicators observed:
+- sequential enumeration of network shares
+- historian schema queries from non-engineering account

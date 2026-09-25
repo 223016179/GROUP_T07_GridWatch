@@ -1,0 +1,11 @@
+Advisory ADV-2026-104
+Threat actor / activity cluster: Unattributed activity cluster (tracked internally as CLUSTER-BRONZE)
+
+Summary:
+A further CLUSTER-BRONZE case shows the group collecting historian trend data spanning several months prior to any attempt at process interference, suggesting reconnaissance of operational baselines as a precursor to a later impact attempt.
+
+Associated ATT&CK for ICS tactics: Collection, Discovery
+
+Indicators observed:
+- bulk export of historian trend data
+- queries spanning multi-month historical range from non-analyst account
